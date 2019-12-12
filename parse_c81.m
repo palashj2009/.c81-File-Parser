@@ -1,7 +1,8 @@
-%% (c) Palash Jain, 
+%% (c) Palash Jain
 % This file parses the first .c81 file in the directory
 % .c81 files contain airfoil tables for use in 2-D lifting-line analysis
 % For Matlab R2018b and higher (replace rmmissing for backward compatibility) 
+% 12/12/2019 update: No error if Cm data is absent in the file.
 file = ls('*.c81');
 file = file(1,:);
 
@@ -20,6 +21,9 @@ T = str2double(T(1:end-1,:));
 
 %% Parse
 for data = 1:3 %1 for Cl, 2 for Cd, 3 for Cm
+    if isempty(T)
+        return
+    end
     if isnan(T(2,1)) %data spans two lines
         lines_Cx = 2;
         [x,y]=find(isnan(T(3:2:end,1)));
